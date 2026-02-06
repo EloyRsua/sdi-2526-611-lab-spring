@@ -3,7 +3,17 @@ package com.uniovi.sdi.sdi2526611spring.entities;
 public class Mark {
     private Long id;
     private String description;
-    private int score;
+    private double score;
+
+    public Mark(){
+
+    }
+
+    public Mark(Long id, String description, double score) {
+        this.id = id;
+        this.description = description;
+        this.score = score;
+    }
 
     public Long getId() {
         return id;
@@ -21,11 +31,20 @@ public class Mark {
         this.description = description;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(double score) {
         this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "Mark{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", score=" + score +
+                '}';
     }
 }
