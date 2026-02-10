@@ -3,51 +3,54 @@ package com.uniovi.sdi.sdi2526611spring.controllers;
 import com.uniovi.sdi.sdi2526611spring.entities.Professor;
 import com.uniovi.sdi.sdi2526611spring.services.ProfessorsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
 
-@RestController
+@Controller
 public class ProfessorsController {
 
     @Autowired
     private ProfessorsService professorsService;
 
     @GetMapping("/professor/list")
-    public String getList() {
-        return "Lista de profesores: " + professorsService.getProfessors().toString();
+    public String getList(Model model) {
+        model.addAttribute("professorList", professorsService.getProfessors());
+        return "professor/list";
     }
 
     @GetMapping("/professor/add")
     public String getAdd() {
-        return "Formulario de añadir profesor";
+        return "professor/add";
     }
 
     @PostMapping("/professor/add")
     public String setProfessor(@ModelAttribute Professor professor) {
         professorsService.addProfessor(professor);
-        return "Nuevo profesor añadido: " + professor.getNombre();
+        return "redirect:/professor/list"; // Redirige a la lista actualizada
     }
 
     @GetMapping("/professor/details/{id}")
-    public String getDetail(@PathVariable Long id) {
-        Professor p = professorsService.getProfessor(id);
-        return "Detalles del profesor: " + (p != null ? p.getNombre() : "No encontrado");
+    public String getDetail(Model model, @PathVariable Long id) {
+        model.addAttribute("professor", professorsService.getProfessor(id));
+        return "professor/details";
     }
 
     @GetMapping("/professor/delete/{id}")
     public String deleteProfessor(@PathVariable Long id) {
         professorsService.deleteProfessor(id);
-        return "Profesor eliminado: " + id;
+        return "redirect:/professor/list";
     }
 
     @GetMapping("/professor/edit/{id}")
     public String getEdit(@PathVariable Long id) {
-        return "Editando al profesor con ID: " + id;
+        return "/professor/edit/{id}" ;
     }
 
     @PostMapping("/professor/edit/{id}")
     public String setEdit(@ModelAttribute Professor professor, @PathVariable Long id) {
         professor.setId(id);
         professorsService.addProfessor(professor);
-        return "Profesor editado correctamente: " + professor.getNombre();
+        return "redirect:/professor/list";
     }
 }
