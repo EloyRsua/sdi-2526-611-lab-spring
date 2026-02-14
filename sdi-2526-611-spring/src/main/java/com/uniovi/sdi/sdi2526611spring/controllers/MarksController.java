@@ -2,6 +2,7 @@ package com.uniovi.sdi.sdi2526611spring.controllers;
 
 import com.uniovi.sdi.sdi2526611spring.entities.Mark;
 import com.uniovi.sdi.sdi2526611spring.services.MarksService;
+import com.uniovi.sdi.sdi2526611spring.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,24 +10,30 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MarksController {
-    @Autowired
-    private MarksService marksService;
+    private final MarksService marksService;
+    private final UsersService usersService;
 
-    @RequestMapping(value = "/mark/list", method = RequestMethod.GET)
-    public String getList(Model model){
-        model.addAttribute("marksList",marksService.getMarks());
-        return "/mark/list";
+    public MarksController(MarksService marksService, UsersService usersService) {
+        this.marksService = marksService;
+        this.usersService = usersService;
+    }
+
+    @GetMapping("/mark/add")
+    public String getMark(Model model) {
+        model.addAttribute("usersList",usersService.getUsers());
+        return "/mark/add";
     }
 
     @PostMapping("/mark/add")
     public String setMark(@ModelAttribute Mark mark) {
         marksService.addMark(mark);
-        return "redirect:/mark/list";
+        return "/mark/add";
     }
 
-    @GetMapping("/mark/add")
-    public String getMark() {
-        return "/mark/add";
+    @RequestMapping(value = "/mark/list", method = RequestMethod.GET)
+    public String getList(Model model){
+        model.addAttribute("marksList",marksService.getMarks());
+        return "/mark/list";
     }
 
     @GetMapping(value="/mark/details/{id}")
@@ -43,14 +50,17 @@ public class MarksController {
     @GetMapping(value = "/mark/edit/{id}")
     public String getEdit(Model model, @PathVariable Long id) {
         model.addAttribute("mark", marksService.getMark(id));
+        model.addAttribute("usersList", usersService.getUsers());
         return "mark/edit";
     }
 
     @PostMapping(value = "/mark/edit/{id}")
     public String setEdit(@ModelAttribute Mark mark, @PathVariable Long id) {
-        mark.setId(id);
-        marksService.addMark(mark);
-        return "redirect:/mark/details/"+id;
+        Mark originalMark = marksService.getMark(id);
+        originalMark.setScore(mark.getScore());
+        originalMark.setDescription(mark.getDescription());
+        marksService.addMark(originalMark);
+        return "redirect:/mark/details/" + id;
     }
 
     @GetMapping("/mark/list/update")
