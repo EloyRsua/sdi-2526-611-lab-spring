@@ -1,7 +1,10 @@
 package com.uniovi.sdi.sdi2526611spring.controllers;
 
 import com.uniovi.sdi.sdi2526611spring.entities.User;
+import com.uniovi.sdi.sdi2526611spring.services.SecurityService;
 import com.uniovi.sdi.sdi2526611spring.services.UsersService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,8 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class UsersController {
     private final UsersService usersService;
-    public UsersController(UsersService usersService) {
+    private final SecurityService securityService;
+
+    public UsersController(UsersService usersService, SecurityService securityService) {
         this.usersService = usersService;
+        this.securityService = securityService;
     }
     @GetMapping("/user/list")
     public String getListado(Model model) {
@@ -47,5 +53,26 @@ public class UsersController {
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
         usersService.addUser(user);
         return "redirect:/user/details/" + id;
+    }
+
+    //SEGURIDAD
+
+    @PostMapping("/signup")
+    public String signup(@ModelAttribute("user") User user, Model model) {
+        usersService.addUser(user);
+        securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
+        return "redirect:home";
+    }
+    @GetMapping( "/login")
+    public String login() {
+        return "login";
+    }
+    @GetMapping("/home")
+    public String home(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String dni = auth.getName();
+        User activeUser = usersService.getUserByDni(dni);
+        model.addAttribute("markList", activeUser.getMarks());
+        return "home";
     }
 }

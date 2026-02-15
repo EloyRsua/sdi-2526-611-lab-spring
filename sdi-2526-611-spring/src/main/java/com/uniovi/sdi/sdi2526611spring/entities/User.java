@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue
@@ -16,12 +17,30 @@ public class User {
     private String role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Mark> marks;
+
+    private String password;
+    @Transient //NO se almacena en la tabla
+    private String passwordConfirm;
     public User(String dni, String name, String lastName) {
         super();
         this.dni = dni;
         this.name = name;
         this.lastName = lastName;
     }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
+    }
+
     public User() { }
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }

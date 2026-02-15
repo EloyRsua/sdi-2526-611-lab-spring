@@ -1,0 +1,37 @@
+package com.uniovi.sdi.sdi2526611spring.services;
+
+import com.uniovi.sdi.sdi2526611spring.entities.User;
+import com.uniovi.sdi.sdi2526611spring.repositories.UsersRepository;
+import org.jspecify.annotations.NullMarked;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@NullMarked
+@Service("userDetailsService")
+public class UserDetailsServiceImpl implements UserDetailsService {
+    private final UsersRepository usersRepository;
+    public UserDetailsServiceImpl(UsersRepository usersRepository) {
+        this.usersRepository = usersRepository;
+    }
+    @Override
+    public UserDetails loadUserByUsername(String dni) throws UsernameNotFoundException {
+        User user = usersRepository.findByDni(dni);
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
+        if (user == null) {
+            throw new UsernameNotFoundException(dni);
+        }
+        return new org.springframework.security.core.userdetails.User(
+                user.getDni(), user.getPassword(), grantedAuthorities);
+    }
+}
