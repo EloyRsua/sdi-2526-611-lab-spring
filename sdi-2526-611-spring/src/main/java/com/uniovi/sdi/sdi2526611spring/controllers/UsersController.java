@@ -3,20 +3,25 @@ package com.uniovi.sdi.sdi2526611spring.controllers;
 import com.uniovi.sdi.sdi2526611spring.entities.User;
 import com.uniovi.sdi.sdi2526611spring.services.SecurityService;
 import com.uniovi.sdi.sdi2526611spring.services.UsersService;
+import com.uniovi.sdi.sdi2526611spring.validators.SignUpFormValidator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class UsersController {
     private final UsersService usersService;
     private final SecurityService securityService;
+    private final SignUpFormValidator signUpFormValidator;
 
-    public UsersController(UsersService usersService, SecurityService securityService) {
+    public UsersController(UsersService usersService, SecurityService securityService, SignUpFormValidator signUpFormValidator) {
         this.usersService = usersService;
         this.securityService = securityService;
+        this.signUpFormValidator = signUpFormValidator;
     }
     @GetMapping("/user/list")
     public String getListado(Model model) {
@@ -58,11 +63,16 @@ public class UsersController {
     //SEGURIDAD
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute("user") User user, Model model) {
+    public String signup(@Validated User user, BindingResult result) {
+        signUpFormValidator.validate(user, result);
+        if (result.hasErrors()) {
+            return "signup";
+        }
         usersService.addUser(user);
         securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
         return "redirect:home";
     }
+
     @GetMapping( "/login")
     public String login() {
         return "login";
@@ -74,5 +84,11 @@ public class UsersController {
         User activeUser = usersService.getUserByDni(dni);
         model.addAttribute("markList", activeUser.getMarks());
         return "home";
+    }
+
+    @GetMapping("/signup")
+    public String signup(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
     }
 }
