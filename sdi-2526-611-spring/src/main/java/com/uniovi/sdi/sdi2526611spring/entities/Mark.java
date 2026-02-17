@@ -8,6 +8,7 @@ public class Mark {
     @GeneratedValue
     private Long id;
     private String description;
+
     private Double score;
     @ManyToOne
     @JoinColumn(name = "user_id")

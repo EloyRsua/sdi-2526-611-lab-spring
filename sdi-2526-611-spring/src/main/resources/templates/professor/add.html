@@ -65,38 +65,25 @@
   </div>
 </nav>
 
-<div class="container" id="main-container">
-  <h2>Agregar profesor</h2>
-  <form class="form-horizontal" method="post" action="/professor/add">
+<div class="container">
+  <h2>Añadir Profesor</h2>
+  <form method="post" th:action="@{/professor/add}" th:object="${professor}">
     <div class="form-group">
-      <label class="control-label col-sm-2" for="dni">DNI:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="dni" name="dni" placeholder="DNI del profesor" required="true" />
-      </div>
+      <label>DNI:</label>
+      <input type="text" class="form-control" th:field="*{dni}" />
+      <small class="text-danger" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></small>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="nombre">Nombre:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre" required="true" />
-      </div>
+      <label>Nombre:</label>
+      <input type="text" class="form-control" th:field="*{nombre}" />
+      <small class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="apellido">Apellido:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Apellido" required="true" />
-      </div>
+      <label>Apellido:</label>
+      <input type="text" class="form-control" th:field="*{apellido}" />
+      <small class="text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
     </div>
-    <div class="form-group">
-      <label class="control-label col-sm-2" for="categoria">Categoría:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="categoria" name="categoria" placeholder="Titular, Catedrático..." required="true" />
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-primary">Enviar</button>
-      </div>
-    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
   </form>
 </div>
 

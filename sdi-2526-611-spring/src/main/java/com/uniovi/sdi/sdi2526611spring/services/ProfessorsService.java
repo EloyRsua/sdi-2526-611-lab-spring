@@ -24,11 +24,14 @@ public class ProfessorsService {
     }
 
     public void addProfessor(Professor professor) {
-        // save sirve tanto para insertar como para actualizar si el id existe
         professorsRepository.save(professor);
     }
 
     public void deleteProfessor(Long id) {
         professorsRepository.deleteById(id);
+    }
+
+    public Professor getProfessorByDni(String dni) {
+        return professorsRepository.findByDni(dni);
     }
 }
