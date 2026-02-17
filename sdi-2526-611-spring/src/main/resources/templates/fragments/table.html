@@ -1,0 +1,21 @@
+<div th:fragment="userTable" id="marksTable"> <table class="table table-hover">
+  <thead>
+  <tr>
+    <th>DNI</th>
+    <th>Nombre</th>
+    <th>Apellidos</th>
+    <th></th><th></th><th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${usersList}">
+    <td th:text="${user.dni}"></td>
+    <td th:text="${user.name}"></td>
+    <td th:text="${user.lastName}"></td>
+    <td><a th:href="${'/user/details/' + user.id}">detalles</a></td>
+    <td><a th:href="${'/user/edit/' + user.id}">modificar</a></td>
+    <td><a th:href="${'/user/delete/' + user.id}">eliminar</a></td>
+  </tr>
+  </tbody>
+</table>
+</div>

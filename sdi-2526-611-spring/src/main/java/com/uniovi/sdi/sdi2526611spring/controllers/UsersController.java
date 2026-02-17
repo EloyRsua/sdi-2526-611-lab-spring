@@ -54,10 +54,12 @@ public class UsersController {
         model.addAttribute("user", user);
         return "user/edit";
     }
+
     @PostMapping(value = "/user/edit/{id}")
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
-        usersService.addUser(user);
-        return "redirect:/user/details/" + id;
+        user.setId(id); // Aseguramos que el ID es el correcto
+        usersService.editUser(user);
+        return "redirect:/user/list";
     }
 
     //SEGURIDAD
@@ -90,5 +92,17 @@ public class UsersController {
     public String signup(Model model) {
         model.addAttribute("user", new User());
         return "signup";
+    }
+
+    @RequestMapping("/user/details/{id}")
+    public String getDetails(Model model, @PathVariable Long id) {
+        model.addAttribute("user", usersService.getUser(id));
+        return "user/details";
+    }
+
+    @GetMapping("/user/list/update")
+    public String updateList(Model model){
+        model.addAttribute("usersList", usersService.getUsers());
+        return "fragments/table :: userTable";
     }
 }
