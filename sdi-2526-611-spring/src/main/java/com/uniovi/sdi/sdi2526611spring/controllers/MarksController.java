@@ -4,11 +4,15 @@ import com.uniovi.sdi.sdi2526611spring.entities.Mark;
 import com.uniovi.sdi.sdi2526611spring.services.MarksService;
 import com.uniovi.sdi.sdi2526611spring.services.UsersService;
 import com.uniovi.sdi.sdi2526611spring.validators.MarksValidator;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class MarksController {
@@ -16,10 +20,11 @@ public class MarksController {
     private final UsersService usersService;
     @Autowired
     private MarksValidator marksValidator;
-
-    public MarksController(MarksService marksService, UsersService usersService) {
+    private final HttpSession httpSession;
+    public MarksController(MarksService marksService, UsersService usersService, HttpSession httpSession) {
         this.marksService = marksService;
         this.usersService = usersService;
+        this.httpSession = httpSession;
     }
 
     @GetMapping("/mark/add")
@@ -39,8 +44,11 @@ public class MarksController {
         return "redirect:/mark/list";
     }
 
-    @RequestMapping(value = "/mark/list", method = RequestMethod.GET)
+    @GetMapping(value = "/mark/list")
     public String getList(Model model){
+        Set<Mark> consultedList = (Set<Mark>) httpSession.getAttribute("consultedList")!=null? (Set<Mark>) httpSession.getAttribute("consultedList") :new HashSet<>();
+
+        model.addAttribute("consultedList",consultedList);
         model.addAttribute("marksList",marksService.getMarks());
         return "/mark/list";
     }
