@@ -6,6 +6,9 @@ import com.uniovi.sdi.sdi2526611spring.repositories.MarksRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,10 +30,8 @@ public class MarksService {
         this.httpSession=httpSession;
     }
 
-    public List<Mark> getMarks() {
-        List<Mark> marks=new ArrayList<Mark>();
-        marksRepository.findAll().forEach(marks::add);
-        return marks;
+    public Page<Mark> getMarks(Pageable pageable) {
+        return marksRepository.findAll(pageable);
     }
     public Mark getMark(Long id) {
         Mark mark = marksRepository.findById(id).isPresent() ? marksRepository.findById(id).get() : new Mark();
@@ -50,23 +51,26 @@ public class MarksService {
             marksRepository.updateResend(revised, id);
         }
     }
-    public List<Mark> getMarksForUser(User user) {
-        List<Mark> marks = new ArrayList<>();
+    public Page<Mark> getMarksForUser(Pageable pageable, User user) {
+        Page<Mark> marks = new PageImpl<>(new LinkedList<>());
         if (user.getRole().equals("ROLE_STUDENT")) {
-            marks = marksRepository.findAllByUser(user);}
+            marks = marksRepository.findAllByUser(pageable, user);
+        }
         if (user.getRole().equals("ROLE_PROFESSOR")) {
-            marks = getMarks(); }
+            marks = getMarks(pageable);
+        }
         return marks;
     }
 
-    public List<Mark> searchMarksByDescriptionAndNameForUser(String searchText, User user) {
-        List<Mark> marks = new ArrayList<>();
-        searchText = "%"+searchText+"%";
+    public Page<Mark> searchMarksByDescriptionAndNameForUser(Pageable pageable, String searchText, User user)
+    {
+        Page<Mark> marks = new PageImpl<>(new LinkedList<>());
+        searchText = "%" + searchText + "%";
         if (user.getRole().equals("ROLE_STUDENT")) {
-            marks = marksRepository.searchByDescriptionNameAndUser(searchText, user);
+            marks = marksRepository.searchByDescriptionNameAndUser(pageable, searchText, user);
         }
         if (user.getRole().equals("ROLE_PROFESSOR")) {
-            marks = marksRepository.searchByDescriptionAndName(searchText);
+            marks = marksRepository.searchByDescriptionAndName(pageable, searchText);
         }
         return marks;
     }
