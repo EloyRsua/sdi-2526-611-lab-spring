@@ -20,11 +20,9 @@ public class MarksController {
     private final UsersService usersService;
     @Autowired
     private MarksValidator marksValidator;
-    private final HttpSession httpSession;
     public MarksController(MarksService marksService, UsersService usersService, HttpSession httpSession) {
         this.marksService = marksService;
         this.usersService = usersService;
-        this.httpSession = httpSession;
     }
 
     @GetMapping("/mark/add")
@@ -46,9 +44,6 @@ public class MarksController {
 
     @GetMapping(value = "/mark/list")
     public String getList(Model model){
-        Set<Mark> consultedList = (Set<Mark>) httpSession.getAttribute("consultedList")!=null? (Set<Mark>) httpSession.getAttribute("consultedList") :new HashSet<>();
-
-        model.addAttribute("consultedList",consultedList);
         model.addAttribute("marksList",marksService.getMarks());
         return "/mark/list";
     }
