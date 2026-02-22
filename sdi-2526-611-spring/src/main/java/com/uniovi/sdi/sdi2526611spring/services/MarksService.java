@@ -1,6 +1,7 @@
 package com.uniovi.sdi.sdi2526611spring.services;
 
 import com.uniovi.sdi.sdi2526611spring.entities.Mark;
+import com.uniovi.sdi.sdi2526611spring.entities.User;
 import com.uniovi.sdi.sdi2526611spring.repositories.MarksRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
@@ -48,5 +49,13 @@ public class MarksService {
         if(mark.getUser().getDni().equals(dni) ) {
             marksRepository.updateResend(revised, id);
         }
+    }
+    public List<Mark> getMarksForUser(User user) {
+        List<Mark> marks = new ArrayList<>();
+        if (user.getRole().equals("ROLE_STUDENT")) {
+            marks = marksRepository.findAllByUser(user);}
+        if (user.getRole().equals("ROLE_PROFESSOR")) {
+            marks = getMarks(); }
+        return marks;
     }
 }
