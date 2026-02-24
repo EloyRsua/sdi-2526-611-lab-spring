@@ -32,13 +32,22 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/images/**", "/script/**", "/", "/signup",
-                                "/login/**").permitAll()
+                        .requestMatchers("/css/**", "/images/**", "/script/**", "/", "/signup", "/login/**").permitAll()
+
+                        // SEGURIDAD EJERCICIO 1 (Revisión)
                         .requestMatchers("/mark/add").hasAuthority("ROLE_PROFESSOR")
                         .requestMatchers("/mark/edit/*").hasAuthority("ROLE_PROFESSOR")
-                        .requestMatchers("/mark/delte/*").hasAuthority("ROLE_PROFESSOR")
+                        .requestMatchers("/mark/delete/*").hasAuthority("ROLE_PROFESSOR")
+
+                        .requestMatchers("/professor/add", "/professor/edit/*", "/professor/delete/*").hasAuthority("ROLE_ADMIN")
+
+                        .requestMatchers("/professor/details/*").hasAnyAuthority("ROLE_PROFESSOR", "ROLE_ADMIN")
+
+                        .requestMatchers("/professor/list").authenticated()
+
+
                         .requestMatchers("/mark/**").hasAnyAuthority("ROLE_PROFESSOR","ROLE_STUDENT","ROLE_ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("ADMIN")
+                        .requestMatchers("/user/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

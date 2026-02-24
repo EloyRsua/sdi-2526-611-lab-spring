@@ -1,6 +1,6 @@
 package com.uniovi.sdi.sdi2526611spring;
 
-import org.springframework.beans.factory.annotation.Value; // Importante
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.PageRequest;
@@ -18,11 +18,10 @@ import java.util.Locale;
 @Configuration
 public class CustomConfiguration implements WebMvcConfigurer {
 
-    // Inyectamos los valores desde el application.properties
-    @Value("${customer.pagination.page}")
+    @Value("${spring.data.web.pageable.page-parameter}")
     private int page;
 
-    @Value("${customer.pagination.size}")
+    @Value("${spring.data.web.pageable.size-parameter}")
     private int size;
 
     @Bean
@@ -47,7 +46,9 @@ public class CustomConfiguration implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
+
         resolver.setFallbackPageable(PageRequest.of(page, size));
+
         argumentResolvers.add(resolver);
     }
 }
