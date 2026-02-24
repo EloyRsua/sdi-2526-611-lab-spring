@@ -29,8 +29,10 @@
             <tbody>
             <tr th:each="professor : ${professorList}">
                 <td th:text="${professor.dni}">12345678A</td>
-                <td th:text="${professor.name}">Nombre</td>
-                <td th:text="${professor.category}">Categoría</td>
+
+                <td th:text="${professor.nombre}">Nombre</td>
+
+                <td th:text="${professor.categoria}">Categoría</td>
 
                 <td>
                     <a th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')') or #authorization.expression('hasRole(''ROLE_ADMIN'')')}"

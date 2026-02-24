@@ -1,13 +1,15 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Notaneitor - Profesores</title>
+  <title>Notaneitor</title>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <!-- JS files: jQuery primero y luego Bootstrap JS -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
@@ -15,47 +17,27 @@
 
 <nav th:replace="~{fragments/nav}"></nav>
 
-<div class="container" id="main-container">
-  <h2>Profesores</h2>
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <th scope="col">DNI</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Categoría</th>
-        <th scope="col"></th>
-        <th scope="col" sec:authorize="hasRole('ROLE_ADMIN')"></th>
-        <th scope="col" sec:authorize="hasRole('ROLE_ADMIN')"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="professor : ${professorList}">
-        <td th:text="${professor.dni}">12345678A</td>
-        <td th:text="${professor.name}">Nombre</td>
-        <td th:text="${professor.category}">Categoría</td>
-
-        <td>
-          <a th:if="${#authorization.expression('hasRole(''ROLE_PROFESSOR'')') or #authorization.expression('hasRole(''ROLE_ADMIN'')')}"
-             th:href="${'/professor/details/' + professor.id}">detalles</a>
-        </td>
-
-        <td sec:authorize="hasRole('ROLE_ADMIN')">
-          <a th:href="${'/professor/edit/' + professor.id}">editar</a>
-        </td>
-        <td sec:authorize="hasRole('ROLE_ADMIN')">
-          <a th:href="${'/professor/delete/' + professor.id}">borrar</a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div th:if="${#lists.isEmpty(professorList)}" class="alert alert-info">
-    No hay profesores registrados en el sistema.
-  </div>
+<div class="container">
+  <h2>Añadir Profesor</h2>
+  <form method="post" th:action="@{/professor/add}" th:object="${professor}">
+    <div class="form-group">
+      <label>DNI:</label>
+      <input type="text" class="form-control" th:field="*{dni}" />
+      <small class="text-danger" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></small>
+    </div>
+    <div class="form-group">
+      <label>Nombre:</label>
+      <input type="text" class="form-control" th:field="*{nombre}" />
+      <small class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+    </div>
+    <div class="form-group">
+      <label>Apellido:</label>
+      <input type="text" class="form-control" th:field="*{apellido}" />
+      <small class="text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
 </div>
 
-<footer th:replace="~{fragments/footer}"></footer>
 </body>
 </html>
