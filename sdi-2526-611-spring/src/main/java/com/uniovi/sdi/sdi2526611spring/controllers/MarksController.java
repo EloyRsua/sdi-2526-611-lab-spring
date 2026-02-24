@@ -92,11 +92,15 @@ public class MarksController {
 
     @GetMapping("/mark/list/update")
     public String updateList(Model model, Pageable pageable, Principal principal) {
-        String dni = principal.getName(); // DNI es el name de la autenticación
+        String dni = principal.getName();
         User user = usersService.getUserByDni(dni);
+
         Page<Mark> marks = marksService.getMarksForUser(pageable, user);
-        model.addAttribute("marksList", marks.getContent() );
-        return "mark/list :: marksTable";
+
+        model.addAttribute("marksList", marks.getContent());
+        model.addAttribute("page", marks);
+
+        return "fragments/tableNotes :: tableNotes";
     }
     @GetMapping("/mark/{id}/resend")
     public String setResendTrue(@PathVariable Long id) {
@@ -108,4 +112,5 @@ public class MarksController {
         marksService.setMarkResend(false, id);
         return "redirect:/mark/list";
     }
+
 }

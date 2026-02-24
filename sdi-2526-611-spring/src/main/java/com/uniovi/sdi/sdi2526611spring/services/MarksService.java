@@ -52,14 +52,16 @@ public class MarksService {
         }
     }
     public Page<Mark> getMarksForUser(Pageable pageable, User user) {
-        Page<Mark> marks = new PageImpl<>(new LinkedList<>());
-        if (user.getRole().equals("ROLE_STUDENT")) {
-            marks = marksRepository.findAllByUser(pageable, user);
+        // Usamos equalsIgnoreCase para evitar fallos por mayúsculas/minúsculas
+        if (user.getRole().equalsIgnoreCase("ROLE_PROFESSOR")) {
+            // IMPORTANTE: Asegúrate de que marksRepository.findAll(pageable) no sea null
+            return marksRepository.findAll(pageable);
         }
-        if (user.getRole().equals("ROLE_PROFESSOR")) {
-            marks = getMarks(pageable);
+        if (user.getRole().equalsIgnoreCase("ROLE_STUDENT")) {
+            return marksRepository.findAllByUser(pageable, user);
         }
-        return marks;
+        // SIEMPRE devuelve una página vacía en lugar de null para que la vista no explote
+        return new PageImpl<>(new ArrayList<>(), pageable, 0);
     }
 
     public Page<Mark> searchMarksByDescriptionAndNameForUser(Pageable pageable, String searchText, User user)
