@@ -12,7 +12,7 @@
 
   <hr/>
   <p>Notas del usuario</p>
-
+  <p>Tu rol actual es: <span sec:authentication="principal.authorities"></span></p>
   <div th:replace="~{fragments/tableNotes :: tableNotes(marksList=${marksList}, page=${page})}"></div>
   <footer th:replace="fragments/pagination"></footer>
 </div>
