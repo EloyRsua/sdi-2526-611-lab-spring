@@ -1,9 +1,14 @@
 package com.uniovi.sdi.sdi2526611spring;
 
+import com.uniovi.sdi.sdi2526611spring.pageobjects.PO_HomeView;
+import com.uniovi.sdi.sdi2526611spring.pageobjects.PO_Properties;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -46,28 +51,35 @@ static String PathFirefox = "/Applications/Firefox.app/Contents/MacOS/firefox";
     }
     @Test
     @Order(1)
-    void PRO1(){
-        Assertions.assertTrue(true);
+    void PR01A() {
+        PO_HomeView.checkWelcomeToPage(driver, PO_Properties.getSPANISH());
     }
     @Test
     @Order(2)
-    void PRO2(){
-        Assertions.assertTrue(true);
+    void PR01B() {
+        List<WebElement> welcomeMessageElement = PO_HomeView.getWelcomeMessageText(driver,
+                PO_Properties.getSPANISH());
+        Assertions.assertEquals(welcomeMessageElement.getFirst().getText(),
+                PO_HomeView.getP().getString("welcome.message", PO_Properties.getSPANISH()));
     }
+    //PR02. Opción de navegación. Pinchar en el enlace Registro en la página home
     @Test
     @Order(3)
-    void PRO3(){
-        Assertions.assertTrue(true);
+    public void PR02() {
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
     }
+    //PR03. Opción de navegación. Pinchar en el enlace Identifícate en la página home
     @Test
     @Order(4)
-    void PRO4(){
-        Assertions.assertTrue(true);
+    public void PR03() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
     }
+    //PR04. Opción de navegación. Cambio de idioma de Español a Inglés y vuelta a Español
     @Test
     @Order(5)
-    void PRO5(){
-        Assertions.assertTrue(true);
+    public void PR04() {
+        PO_HomeView.checkChangeLanguage(driver, "btnSpanish", "btnEnglish",
+                PO_Properties.getSPANISH(), PO_Properties.getENGLISH());
     }
     @Test
     @Order(6)
