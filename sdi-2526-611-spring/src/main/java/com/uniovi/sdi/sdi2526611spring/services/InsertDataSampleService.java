@@ -1,6 +1,7 @@
 package com.uniovi.sdi.sdi2526611spring.services;
 
 import com.uniovi.sdi.sdi2526611spring.entities.Mark;
+import com.uniovi.sdi.sdi2526611spring.entities.Professor;
 import com.uniovi.sdi.sdi2526611spring.entities.User;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,12 @@ import java.util.Set;
 public class InsertDataSampleService {
     private final UsersService usersService;
     private final RolesService rolesService;
-    public InsertDataSampleService(UsersService usersService, RolesService rolesService) {
+    private final ProfessorsService professorsService;
+
+    public InsertDataSampleService(UsersService usersService, RolesService rolesService, ProfessorsService professorsService) {
         this.usersService = usersService;
         this.rolesService = rolesService;
+        this.professorsService = professorsService;
     }
     @PostConstruct
     public void init() {
@@ -75,5 +79,8 @@ public class InsertDataSampleService {
         usersService.addUser(user4);
         usersService.addUser(user5);
         usersService.addUser(user6);
+
+        professorsService.addProfessor(new Professor(null, "11111111A", "Alvaro", "García", "Catedrático"));
+        professorsService.addProfessor(new Professor(null, "22222222B", "Elena", "Rodríguez", "Titular"));
     }
 }

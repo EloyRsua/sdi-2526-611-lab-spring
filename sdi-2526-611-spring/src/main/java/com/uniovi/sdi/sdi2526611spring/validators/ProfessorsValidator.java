@@ -33,6 +33,7 @@ public class ProfessorsValidator implements Validator {
         // Validación de DNI por pasos (8 números + 1 letra)
         if (dni == null || dni.length() != 9) {
             errors.rejectValue("dni", "Error.professor.dni.format");
+            return;
         }
         if (professorsService.getProfessorByDni(dni) != null) {
             errors.rejectValue("dni", "Error.professor.dni.duplicate");
