@@ -107,11 +107,4 @@ public class ProfesoresTests {
         Assertions.assertEquals(totalEsperado, filas.size(), "El número de filas no coincide con los profesores del sistema");
     }
 
-    @Test
-    @Order(6)
-    public void testEdicionProfesor() {
-        PO_NavView.clickOption(driver, "/login", "text", "Identifícate");
-        PO_LoginView.fillLoginForm(driver, "99999988F", "123456");
-
-    }
 }

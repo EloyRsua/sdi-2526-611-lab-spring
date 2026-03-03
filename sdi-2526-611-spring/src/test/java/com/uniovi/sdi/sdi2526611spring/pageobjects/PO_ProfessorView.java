@@ -30,30 +30,22 @@ public class PO_ProfessorView extends PO_NavView {
         driver.findElement(boton).click();
     }
 
-    static public void fillEditForm(WebDriver driver, String dnip, String nombrep, String apellidop, String categoriap) {
+    static public void fillEditForm(WebDriver driver, String dnip, String namep, String lastnamep, String categoryp) {
         WebElement dni = driver.findElement(By.name("dni"));
-        dni.click();
-        dni.clear();
-        dni.sendKeys(dnip);
+        dni.click(); dni.clear(); dni.sendKeys(dnip);
 
-        // Campos según tu edit.html: name="name" y name="lastName"
-        WebElement nombre = driver.findElement(By.name("name"));
-        nombre.click();
-        nombre.clear();
-        nombre.sendKeys(nombrep);
+        // IMPORTANTE: Tu edit.html usa name="name" y name="lastName"
+        WebElement name = driver.findElement(By.name("name"));
+        name.click(); name.clear(); name.sendKeys(namep);
 
-        WebElement apellido = driver.findElement(By.name("lastName"));
-        apellido.click();
-        apellido.clear();
-        apellido.sendKeys(apellidop);
+        WebElement lastname = driver.findElement(By.name("lastName"));
+        lastname.click(); lastname.clear(); lastname.sendKeys(lastnamep);
 
-        WebElement categoria = driver.findElement(By.name("category"));
-        categoria.click();
-        categoria.clear();
-        categoria.sendKeys(categoriap);
+        WebElement category = driver.findElement(By.name("category"));
+        category.click(); category.clear(); category.sendKeys(categoryp);
 
-        // Botón de envío (clase btn-primary en tu edit.html)
-        By boton = By.className("btn-primary");
+        // Buscamos el botón por el texto "Modificar" que aparece en tu HTML
+        By boton = By.xpath("//button[text()='Modificar']");
         driver.findElement(boton).click();
     }
 }
